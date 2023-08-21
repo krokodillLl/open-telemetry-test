@@ -1,0 +1,65 @@
+version: '3.8'
+name: open-telemetry-test
+services:
+
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "14250:14250"
+
+  postgres:
+    container_name: postgres
+    image: postgres:13.0-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=test_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+
+  eureka:
+    container_name: eureka
+    build:
+      context: ./../eureka
+      dockerfile: Dockerfile
+    ports:
+      - "5776:5776"
+    environment:
+      SERVER_PORT: "5776"
+
+  main-service:
+    container_name: main-service
+    build:
+      context: ./../main-service
+      dockerfile: Dockerfile
+    environment:
+      - OTEL_SERVICE_NAME=main-service
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_TRACES_EXPORTER=jaeger
+      - OTEL_EXPORTER_JAEGER_ENDPOINT=http://jaeger:14250
+    ports:
+      - "8080:8080"
+      - "5006:5006"
+    depends_on:
+    - eureka
+    - jaeger
+
+  item-service:
+    container_name: item-service
+    build:
+      context: ./../item-service
+      dockerfile: Dockerfile
+    environment:
+      - OTEL_SERVICE_NAME=item-service
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_TRACES_EXPORTER=jaeger
+      - OTEL_EXPORTER_JAEGER_ENDPOINT=http://jaeger:14250
+    ports:
+      - "8081:8081"
+      - "5005:5005"
+    depends_on:
+      - eureka
+      - postgres
+      - jaeger

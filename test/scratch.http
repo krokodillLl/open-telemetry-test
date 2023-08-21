@@ -1,0 +1,61 @@
+### request test endpoint with quickly response time
+GET localhost:8080/test/quickly
+
+<> 2023-08-21T233708.200.txt
+###
+
+### request test endpoint with normal response time
+GET localhost:8080/test/normal
+
+<> 2023-08-21T233703.200.txt
+###
+
+### request test endpoint with slowly response time
+GET localhost:8080/test/slowly
+
+<> 2023-08-21T233710.200.txt
+###
+
+### request test endpoint with error response
+GET localhost:8080/test/error
+
+<> 2023-08-21T233706.500.json
+###
+
+### request item endpoint for create item with full fields
+POST localhost:8080/items/create
+Content-Type: application/json
+
+{
+  "title": "test title 1",
+  "content": "test content 1"
+}
+###
+
+### request item endpoint for create item without field
+POST localhost:8080/items/create
+Content-Type: application/json
+
+{
+  "content": "testing validation error"
+}
+###
+
+### request item endpoint for update item without field
+PUT localhost:8080/items/update/1
+Content-Type: application/json
+
+{
+  "content": "New content 1"
+}
+###
+
+### request item endpoint for getting item by id
+GET localhost:8080/items/1
+
+###
+
+### request item endpoint for getting all items
+GET localhost:8080/items
+
+###

@@ -24,10 +24,9 @@ services:
     image: solr:latest
     ports:
       - "8983:8983"
-    entrypoint:
-      - bash
-      - "-c"
-      - "precreate-core item; exec solr -f"
+    command:
+      - solr-precreate
+      - item
     environment:
       - SOLR_MODULES=opentelemetry
       - JAVA_TOOL_OPTIONS=-Dhost=localhost
@@ -38,7 +37,7 @@ services:
       - OTEL_TRACES_SAMPLER=parentbased_always_on
       - OTEL_PROPAGATORS=tracecontext,baggage
     volumes:
-      - ./solr/volume/solr.xml:/var/solr/data/solr.xml
+      - ./solr/volume/:/var/solr/data/
 
   eureka:
     container_name: eureka

@@ -1,9 +1,10 @@
-package com.krokoq.simple.opentelemetry.rest.domain;
+package com.krokoq.simple.opentelemetry.rest.domain.db.entity;
 
-import jakarta.persistence.*;
+import com.krokoq.simple.opentelemetry.rest.domain.ConvertibleItem;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemEntity {
+public class ItemEntity implements ConvertibleItem {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_sequence_generator")
     @SequenceGenerator(name = "item_id_sequence_generator",

@@ -26,7 +26,7 @@ public class ItemController {
     }
 
     @GetMapping("{id}")
-    public ItemResponse getItems(@PathVariable Long id) {
+    public ItemResponse getItemById(@PathVariable Long id) {
         return convert(
                 itemService.getItemById(id)
         );
@@ -46,6 +46,39 @@ public class ItemController {
         return convert(
                 itemService.updateItem(
                         convert(updateItemRequest, id)
+                )
+        );
+    }
+
+
+    @GetMapping("/solr")
+    public List<ItemResponse> getSolrItems() {
+        return itemService.getItemsFromSolr().stream()
+                .map(this::convert)
+                .toList();
+    }
+
+    @GetMapping("/solr/{title}")
+    public ItemResponse getSolrItemByTitle(@PathVariable String title) {
+        return convert(
+                itemService.getItemFromSolrByTitle(title)
+        );
+    }
+
+    @PostMapping("/solr/create")
+    public ItemResponse createSolrItem(@RequestBody @Valid CreateItemRequest createItemRequest) {
+        return convert(
+                itemService.createItemInSolr(
+                        convert(createItemRequest)
+                )
+        );
+    }
+
+    @PutMapping("/solr/update/{title}")
+    public ItemResponse updateSolrItem(@RequestBody @Valid UpdateItemRequest updateItemRequest, @PathVariable String title) {
+        return convert(
+                itemService.updateItemInSolr(
+                        convert(updateItemRequest, title)
                 )
         );
     }
@@ -70,6 +103,13 @@ public class ItemController {
     private ItemIn convert(UpdateItemRequest updateItemRequest, Long id) {
         return ItemIn.builder()
                 .id(id)
+                .content(updateItemRequest.getContent())
+                .build();
+    }
+
+    private ItemIn convert(UpdateItemRequest updateItemRequest, String title) {
+        return ItemIn.builder()
+                .title(title)
                 .content(updateItemRequest.getContent())
                 .build();
     }

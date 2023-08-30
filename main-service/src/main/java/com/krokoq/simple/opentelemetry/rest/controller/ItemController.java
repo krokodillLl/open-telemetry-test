@@ -49,4 +49,40 @@ public class ItemController {
                 ItemResponse.class
         ).getBody();
     }
+
+
+    @GetMapping("/solr")
+    public ItemResponse[] getSolrItems() {
+        return restTemplate.getForEntity(
+                "http://item-service:8081/items/solr",
+                ItemResponse[].class
+        ).getBody();
+    }
+
+    @GetMapping("/solr/{title}")
+    public ItemResponse getSolrItemByTitle(@PathVariable String title) {
+        return restTemplate.getForEntity(
+                "http://item-service:8081/items/solr/" + title,
+                ItemResponse.class
+        ).getBody();
+    }
+
+    @PostMapping("/solr/create")
+    public ItemResponse createSolrItem(@RequestBody CreateItemRequest createItemRequest) {
+        return restTemplate.postForEntity(
+                "http://item-service:8081/items/solr/create",
+                createItemRequest,
+                ItemResponse.class
+        ).getBody();
+    }
+
+    @PutMapping("/solr/update/{title}")
+    public ItemResponse updateSolrItem(@RequestBody UpdateItemRequest updateItemRequest, @PathVariable String title) {
+        return restTemplate.exchange(
+                "http://item-service:8081/items/solr/update/" + title,
+                HttpMethod.PUT,
+                new HttpEntity<>(updateItemRequest),
+                ItemResponse.class
+        ).getBody();
+    }
 }

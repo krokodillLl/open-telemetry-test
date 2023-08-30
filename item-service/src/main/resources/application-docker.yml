@@ -14,7 +14,12 @@ spring:
   liquibase:
     default-schema: public
     change-log: db/changelog-master.xml
-
+  data:
+    solr:
+      host: http://solr:8982/solr
+  solr:
+    host: http://solr:8982/solr
+    core: item
 
 eureka:
   instance:

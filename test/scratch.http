@@ -59,3 +59,32 @@ GET localhost:8080/items/1
 GET localhost:8080/items
 
 ###
+
+### request item endpoint for create item with full fields
+POST localhost:8080/items/solr/create
+Content-Type: application/json
+
+{
+  "title": "test_title_1",
+  "content": "test content 1"
+}
+###
+
+### request item endpoint for update item without field
+PUT localhost:8080/items/solr/update/test_title_1
+Content-Type: application/json
+
+{
+  "content": "New content 1"
+}
+###
+
+### request item endpoint for getting item by title
+GET localhost:8080/items/solr/test_title_1
+
+###
+
+### request item endpoint for getting all items
+GET localhost:8080/items/solr
+
+###

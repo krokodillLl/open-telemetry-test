@@ -4,7 +4,7 @@ services:
 
   jaeger:
     container_name: jaeger
-    image: jaegertracing/all-in-one:latest
+    image: jaegertracing/all-in-one:1.48
     ports:
       - "16686:16686"
       - "14250:14250"
@@ -19,6 +19,27 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
 
+  solr:
+    container_name: solr
+    image: solr:latest
+    ports:
+      - "8983:8983"
+    entrypoint:
+      - bash
+      - "-c"
+      - "precreate-core item; exec solr -f"
+    environment:
+      - SOLR_MODULES=opentelemetry
+      - JAVA_TOOL_OPTIONS=-Dhost=localhost
+      - OTEL_SERVICE_NAME=solr
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_TRACES_SAMPLER=parentbased_always_on
+      - OTEL_PROPAGATORS=tracecontext,baggage
+    volumes:
+      - ./solr/volume/solr.xml:/var/solr/data/solr.xml
+
   eureka:
     container_name: eureka
     build:
@@ -29,23 +50,6 @@ services:
     environment:
       SERVER_PORT: "5776"
 
-  main-service:
-    container_name: main-service
-    build:
-      context: ./../main-service
-      dockerfile: Dockerfile
-    environment:
-      - OTEL_SERVICE_NAME=main-service
-      - OTEL_METRICS_EXPORTER=none
-      - OTEL_TRACES_EXPORTER=jaeger
-      - OTEL_EXPORTER_JAEGER_ENDPOINT=http://jaeger:14250
-    ports:
-      - "8080:8080"
-      - "5006:5006"
-    depends_on:
-    - eureka
-    - jaeger
-
   item-service:
     container_name: item-service
     build:
@@ -53,13 +57,36 @@ services:
       dockerfile: Dockerfile
     environment:
       - OTEL_SERVICE_NAME=item-service
-      - OTEL_METRICS_EXPORTER=none
-      - OTEL_TRACES_EXPORTER=jaeger
-      - OTEL_EXPORTER_JAEGER_ENDPOINT=http://jaeger:14250
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_TRACES_SAMPLER=parentbased_always_on
+      - OTEL_PROPAGATORS=tracecontext,baggage
     ports:
-      - "8081:8081"
       - "5005:5005"
     depends_on:
       - eureka
       - postgres
       - jaeger
+      - solr
+
+  main-service:
+    container_name: main-service
+    build:
+      context: ./../main-service
+      dockerfile: Dockerfile
+    environment:
+      - OTEL_SERVICE_NAME=main-service
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_TRACES_SAMPLER=parentbased_always_on
+      - OTEL_PROPAGATORS=tracecontext,baggage
+    ports:
+      - "8080:8080"
+      - "5006:5006"
+    depends_on:
+    - eureka
+    - jaeger
+    - solr
+    - item-service

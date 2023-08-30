@@ -12,4 +12,9 @@ public interface ItemService {
     ItemOut createItem(ItemIn itemIn);
     ItemOut updateItem(ItemIn itemIn);
 
+    List<ItemOut> getItemsFromSolr();
+    ItemOut getItemFromSolrByTitle(String title);
+    ItemOut createItemInSolr(ItemIn itemIn);
+    ItemOut updateItemInSolr(ItemIn itemIn);
+
 }

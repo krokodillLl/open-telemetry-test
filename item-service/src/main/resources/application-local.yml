@@ -2,7 +2,7 @@ spring:
   application:
     name: item-service
   datasource:
-    url: jdbc:postgresql://postgres:5432/test_db
+    url: jdbc:postgresql://localhost:5432/test_db
     driverClassName: org.postgresql.Driver
     username: admin
     password: admin
@@ -22,7 +22,7 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://eureka:5776/eureka
+      defaultZone: http://localhost:5776/eureka
 
 logging:
   level:

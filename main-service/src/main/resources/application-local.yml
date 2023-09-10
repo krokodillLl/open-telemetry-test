@@ -9,13 +9,13 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://eureka:5776/eureka
+      defaultZone: http://localhost:5776/eureka
 
 service:
   tracing:
     otl:
       enabled: true
-      endpoint: http://jaeger:4317
+      endpoint: http://localhost:4317
       traces:
         probability: 1.0
         propagation: tracecontext,baggage

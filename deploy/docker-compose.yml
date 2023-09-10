@@ -8,6 +8,7 @@ services:
     ports:
       - "16686:16686"
       - "14250:14250"
+      - "4317:4317"
 
   postgres:
     container_name: postgres
@@ -63,29 +64,9 @@ services:
       - OTEL_PROPAGATORS=tracecontext,baggage
     ports:
       - "5005:5005"
+      - "8081:8081"
     depends_on:
       - eureka
       - postgres
       - jaeger
       - solr
-
-  main-service:
-    container_name: main-service
-    build:
-      context: ./../main-service
-      dockerfile: Dockerfile
-    environment:
-      - OTEL_SERVICE_NAME=main-service
-      - OTEL_TRACES_EXPORTER=otlp
-      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
-      - OTEL_TRACES_SAMPLER=parentbased_always_on
-      - OTEL_PROPAGATORS=tracecontext,baggage
-    ports:
-      - "8080:8080"
-      - "5006:5006"
-    depends_on:
-    - eureka
-    - jaeger
-    - solr
-    - item-service

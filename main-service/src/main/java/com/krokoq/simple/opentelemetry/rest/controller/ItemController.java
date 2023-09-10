@@ -13,12 +13,12 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping
     public ItemResponse[] getItems() {
         return restTemplate.getForEntity(
-                "http://item-service:8081/items",
+                "http://localhost:8081/items",
                 ItemResponse[].class
         ).getBody();
     }
@@ -26,7 +26,7 @@ public class ItemController {
     @GetMapping("{id}")
     public ItemResponse getItems(@PathVariable Long id) {
         return restTemplate.getForEntity(
-                "http://item-service:8081/items/" + id,
+                "http://localhost:8081/items/" + id,
                 ItemResponse.class
         ).getBody();
     }
@@ -34,7 +34,7 @@ public class ItemController {
     @PostMapping("/create")
     public ItemResponse createItem(@RequestBody CreateItemRequest createItemRequest) {
         return restTemplate.postForEntity(
-                "http://item-service:8081/items/create",
+                "http://localhost:8081/items/create",
                 createItemRequest,
                 ItemResponse.class
         ).getBody();
@@ -43,7 +43,7 @@ public class ItemController {
     @PutMapping("/update/{id}")
     public ItemResponse updateItem(@RequestBody UpdateItemRequest updateItemRequest, @PathVariable Long id) {
         return restTemplate.exchange(
-                "http://item-service:8081/items/update/" + id,
+                "http://localhost:8081/items/update/" + id,
                 HttpMethod.PUT,
                 new HttpEntity<>(updateItemRequest),
                 ItemResponse.class
@@ -54,7 +54,7 @@ public class ItemController {
     @GetMapping("/solr")
     public ItemResponse[] getSolrItems() {
         return restTemplate.getForEntity(
-                "http://item-service:8081/items/solr",
+                "http://localhost:8081/items/solr",
                 ItemResponse[].class
         ).getBody();
     }
@@ -62,7 +62,7 @@ public class ItemController {
     @GetMapping("/solr/{title}")
     public ItemResponse getSolrItemByTitle(@PathVariable String title) {
         return restTemplate.getForEntity(
-                "http://item-service:8081/items/solr/" + title,
+                "http://localhost:8081/items/solr/" + title,
                 ItemResponse.class
         ).getBody();
     }
@@ -70,7 +70,7 @@ public class ItemController {
     @PostMapping("/solr/create")
     public ItemResponse createSolrItem(@RequestBody CreateItemRequest createItemRequest) {
         return restTemplate.postForEntity(
-                "http://item-service:8081/items/solr/create",
+                "http://localhost:8081/items/solr/create",
                 createItemRequest,
                 ItemResponse.class
         ).getBody();
@@ -79,7 +79,7 @@ public class ItemController {
     @PutMapping("/solr/update/{title}")
     public ItemResponse updateSolrItem(@RequestBody UpdateItemRequest updateItemRequest, @PathVariable String title) {
         return restTemplate.exchange(
-                "http://item-service:8081/items/solr/update/" + title,
+                "http://localhost:8081/items/solr/update/" + title,
                 HttpMethod.PUT,
                 new HttpEntity<>(updateItemRequest),
                 ItemResponse.class

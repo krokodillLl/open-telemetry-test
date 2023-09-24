@@ -2,14 +2,6 @@ version: '3.8'
 name: open-telemetry-test
 services:
 
-  jaeger:
-    container_name: jaeger
-    image: jaegertracing/all-in-one:1.48
-    ports:
-      - "16686:16686"
-      - "14250:14250"
-      - "4317:4317"
-
   postgres:
     container_name: postgres
     image: postgres:13.0-alpine
@@ -29,16 +21,11 @@ services:
       - solr-precreate
       - item
     environment:
-      - SOLR_MODULES=opentelemetry
-      - JAVA_TOOL_OPTIONS=-Dhost=localhost
-      - OTEL_SERVICE_NAME=solr
-      - OTEL_TRACES_EXPORTER=otlp
-      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
-      - OTEL_TRACES_SAMPLER=parentbased_always_on
-      - OTEL_PROPAGATORS=tracecontext,baggage
+      - APPLICATIONINSIGHTS_CONNECTION_STRING=<Your connection string>
     volumes:
-      - ./solr/volume/:/var/solr/data/
+      - ./solr/volume/config/:/etc/default/
+      - ./solr/volume/lib/:/opt/trace/
+#      - ./solr/volume/lib/applicationinsights.json:/opt/trace/applicationinsights.json
 
   eureka:
     container_name: eureka
@@ -55,18 +42,22 @@ services:
     build:
       context: ./../item-service
       dockerfile: Dockerfile
-    environment:
-      - OTEL_SERVICE_NAME=item-service
-      - OTEL_TRACES_EXPORTER=otlp
-      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
-      - OTEL_TRACES_SAMPLER=parentbased_always_on
-      - OTEL_PROPAGATORS=tracecontext,baggage
     ports:
       - "5005:5005"
-      - "8081:8081"
     depends_on:
       - eureka
       - postgres
-      - jaeger
       - solr
+
+  main-service:
+    container_name: main-service
+    build:
+      context: ./../main-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "5006:5006"
+    depends_on:
+    - eureka
+    - solr
+    - item-service

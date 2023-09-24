@@ -1,0 +1,17 @@
+{
+  "connectionString": "<Your connection string>",
+  "instrumentation": {
+    "logging": {
+      "level": "DEBUG"
+    },
+    "selfDiagnostics": {
+      "destination": "file+console",
+      "level": "DEBUG",
+      "file": {
+        "path": "applicationinsights.log",
+        "maxSizeMb": 5,
+        "maxHistory": 1
+      }
+    }
+  }
+}

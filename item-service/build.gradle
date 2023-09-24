@@ -34,6 +34,7 @@ dependencies {
 	implementation 'org.hibernate:hibernate-validator:8.0.1.Final'
 	implementation 'com.krokoq:starter:0.0.1'
 	implementation 'org.springframework.data:spring-data-solr:4.3.15'
+	implementation 'com.microsoft.azure:applicationinsights-spring-boot-starter:2.6.4'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -29,14 +29,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.7'
 	implementation 'com.krokoq:starter:0.0.1'
-	implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:1.27.0-alpha'
-	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
-//	implementation ('org.springframework.cloud:spring-cloud-starter-sleuth:3.1.9')
-//			{
-//		exclude group: 'org.springframework.cloud', module: 'spring-cloud-sleuth-brave'
-//	}
-//	implementation 'org.springframework.cloud:spring-cloud-sleuth-otel-autoconfigure:1.1.4'
-//	implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.29.0'
+	implementation 'com.microsoft.azure:applicationinsights-spring-boot-starter:2.6.4'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

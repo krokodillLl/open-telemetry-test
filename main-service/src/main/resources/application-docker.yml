@@ -2,6 +2,11 @@ spring:
   application:
     name: main-service
 
+azure:
+  application-insights:
+    enabled: true
+    connectionString: <Your connection string>
+
 eureka:
   instance:
     preferIpAddress: true
@@ -10,15 +15,6 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: http://eureka:5776/eureka
-
-service:
-  tracing:
-    otl:
-      enabled: true
-      endpoint: http://jaeger:4317
-      traces:
-        probability: 1.0
-        propagation: tracecontext,baggage
 
 logging:
   level:

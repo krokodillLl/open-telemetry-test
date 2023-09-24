@@ -15,6 +15,11 @@ spring:
     default-schema: public
     change-log: db/changelog-master.xml
 
+azure:
+  application-insights:
+    enabled: true
+    connectionString: <Your connection string>
+
 eureka:
   instance:
     preferIpAddress: true

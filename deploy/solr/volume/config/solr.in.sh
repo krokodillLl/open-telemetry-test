@@ -296,5 +296,5 @@
 # And you don't need them for an external system (such as a load balancer), you can disable the use of a CookieStore with:
 # SOLR_OPTS="$SOLR_OPTS -Dsolr.http.disableCookies=true"
 
-SOLR_OPTS="$SOLR_OPTS -javaagent:/opt/trace/applicationinsights-agent-3.4.17.jar"
+SOLR_OPTS="$SOLR_OPTS -javaagent:/trace/applicationinsights-agent-3.4.17.jar"
 SOLR_OPTS="$SOLR_OPTS -Dapplicationinsights.connection.string=<Your connection string>"

@@ -1,8 +1,7 @@
 ### If you want to start the application - just follow these steps:
 1. Execute the maven task "install" for creating the local starter dependency
-2. Execute the gradle task "bootJar" for creating the jar file for these modules: eureka, item-service
+2. Execute the gradle task "bootJar" for creating the jar file for these modules: eureka, item-service, main-service
 3. Open the deploy directory and use the command "docker-compose up"
-4. start main-service from IDEA
 5. enjoy
 ### Next steps you can use for testing the application:
 1. Open the test directory and "scratch.http" file into it
